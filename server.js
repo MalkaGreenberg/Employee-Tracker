@@ -92,11 +92,9 @@ function addDepartment() {
 // adds a role to the roles table in the database
 function addRole() {
     var departmentNames = [];
-    var departmentId = [];
     db.query('select * from departments', (err, result) => {
         if (err) throw err;
         departmentNames = result.map(departments => departments.departmentName);
-        departmentId = result.id;
         //console.log(departmentNames);
         inquirer
         .prompt([
@@ -117,12 +115,10 @@ function addRole() {
                 choices: departmentNames
             },
         ]).then(({name, salary, deptId}) => {
-            var id;
             db.query('select id from departments where departmentName = ?', deptId, (err, result) =>{
                 if (err) throw err;
                 sql = `INSERT INTO roles (title,salary,department_id) VALUES (?,?,?);`;
-                console.log(result[0].id);
-                db.query(sql, [name, salary, result[0].id], (err, result) => {
+                db.query(sql, [name, salary, result[0].id], (err) => {
                     if (err) throw err;
                     viewTable("select * from roles");
                 }); 
@@ -131,6 +127,69 @@ function addRole() {
         })
     });
    
+}
+
+//adds an employee to the employee table 
+function addEmployee() {
+    var roles = [];
+    var managers;
+    db.query('select * from roles', (err, result) => {
+        if (err) throw err;
+        // collecting the list of roles so they can choose a role
+        roles = result.map(roles => roles.title);
+        db.query('select * from employees', (err, result) => {
+            if (err) throw err;
+            //collecting the list of employees to choose a manager
+            managers = result.map(employees => employees.first_name + ' ' + employees.last_name);
+        //prompt the user
+        inquirer
+        .prompt([
+            {
+                type:'input',
+                name: 'fName',
+                message: `what is the employee's first name?`
+            },
+            {
+                type:'input',
+                name: 'lName',
+                message: `what is the employee's last name?`
+            },
+            {
+                type: 'list',
+                name: "roleId",
+                message: "What is the employee's role? ",
+                choices: roles
+            },
+            {
+                type: 'list',
+                name: "manager",
+                message: "Who is the employee's manager? ",
+                choices: managers
+            },
+        ]).then(({fName, lName, roleId, manager}) => {
+            //getting back the role id for the chosen role
+            db.query('select id from roles where title = ?', roleId, (err, result) =>{
+                if (err) throw err;
+                const role = result[0].id;
+                //separating the first and last name for the next query
+                const managerName = manager.split(' ');
+                // getting back the id for the chosen manager
+                db.query('select id from employees where first_name = ? and last_name = ?',[managerName[0], managerName[1]], (err, result) => {
+                    if (err) throw err;
+                    const managerId = result[0].id;
+                    console.log(result);
+                    sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?);`;
+                    //adding the employee to the table
+                    db.query(sql, [fName, lName, role, managerId], (err) => {
+                        if (err) throw err;
+                        viewTable("select * from employees");
+                    }); 
+                });
+            });
+        })
+        });
+        
+    });
 }
 
 
