@@ -12,17 +12,19 @@
   - [Questions](#questions)
 
   ## Installation
-  clone the respository  and run 'npm i' in the terminal
+  clone the respository and run 'npm i' in the terminal
 
   ## Usage
-  run the command 'node app' in the terminal to start the application, answer the prompts, press Ctrl C to stop
+  run the command 'node app' in the terminal to start the application, answer the prompts, press Ctrl+C to exit the application
+  [screenshot]
+  [link to walkthrough video] ()
 
   ## License
   This project is licensed under MIT.
 
 
   ## Contributing
-  make a pull request  in it hub 
+  make a pull request  in GitHub 
 
   ## Tests
   NA
