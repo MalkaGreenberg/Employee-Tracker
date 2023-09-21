@@ -58,7 +58,7 @@ function start() {
             case 'add an employee':
                 addEmployee();
                 break;
-            case 'update an employee':
+            case 'update an employee role':
                 updateEmployee();
                 break;
         }
@@ -192,12 +192,64 @@ function addEmployee() {
     });
 }
 
+// updates the role of an exsisting employee
+function updateEmployee() {
+    db.query('select * from employees', (err, results) => {
+        if (err) throw err;
+        //getting the first and last name of each employee
+        const employees = results.map(employees => employees.first_name + ' ' + employees.last_name);
+        db.query('select * from roles', (err, result) => {
+            if (err) throw err;
+            // collecting the list of roles so they can choose a role
+            const roles = result.map(roles => roles.title);
+            inquirer
+                .prompt([
+                    {
+                        type: 'list',
+                        name: 'employee',
+                        message: "select the employee you would like to update:",
+                        choices: employees
+                    },
+                    {
+                        type: 'list',
+                        name: 'role',
+                        message: "select the employee's new role:",
+                        choices: roles
+                    },
+                ]).then(({employee, role}) => {
+                    //getting back the role id for the chosen role
+                    db.query('select id from roles where title = ?', role, (err, result) =>{
+                        if (err) throw err;
+                        const roleId = result[0].id;
+                        //separating the first and last name for the next query
+                        const employeeName = employee.split(' ');
+                        // getting back the id for the chosen employee
+                        db.query('select id from employees where first_name = ? and last_name = ?',[employeeName[0], employeeName[1]], (err, result) => {
+                            if (err) throw err;
+                            const employeeId = result[0].id;
+                            sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
+                            //adding the employee to the table
+                            db.query(sql, [roleId, employeeId], (err) => {
+                                if (err) throw err;
+                                viewTable("select * from employees");
+                            }); 
+                        });
+                    });
+                })
+        });
+    });
+}
 
 db.connect((error) => {
     if(error) throw error;
-    console.log(`\x1b[38;5;13m ==========================\x1b[38;5;255m=============================\x1b[38;5;13m===========================`);
+    console.log(`\x1b[38;5;13m ==========================\x1b[38;5;255m=============================\x1b[38;5;13m===========================
+        
+        
+        `);
     console.log(`\x1b[38;5;13m ${f.textSync('Employee Tracker')}`);
-    console.log(`\x1b[38;5;13m ==========================\x1b[38;5;255m=============================\x1b[38;5;13m=========================== \x1b[0m`);
+    console.log(`\x1b[38;5;13m 
+        
+ ==========================\x1b[38;5;255m=============================\x1b[38;5;13m=========================== `);
     start();
 });
 
