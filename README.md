@@ -16,8 +16,9 @@
 
   ## Usage
   run the command 'node app' in the terminal to start the application, answer the prompts, press Ctrl+C to exit the application
-  [screenshot]
-  [link to walkthrough video] ()
+  [screenshot1] (assets/Screenshot1.png)
+  [screenshot] (assets/Screenshot.png)
+  [link to walkthrough video] (https://drive.google.com/file/d/1dWD7CtW_iSjQ-DrotGFxgjlUBODN8hy9/view?usp=sharing)
 
   ## License
   This project is licensed under MIT.
