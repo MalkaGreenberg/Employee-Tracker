@@ -21,7 +21,7 @@
 
   ![screenshot1](assets/Screenshot.png)
 
-  [link to walkthrough video] (https://drive.google.com/file/d/1dWD7CtW_iSjQ-DrotGFxgjlUBODN8hy9/view?usp=sharing)
+  ![link to walkthrough video](https://drive.google.com/file/d/1dWD7CtW_iSjQ-DrotGFxgjlUBODN8hy9/view?usp=sharing)
 
   ## License
   This project is licensed under MIT.
